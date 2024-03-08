@@ -14,9 +14,10 @@ export function WeatherCard(props: WeatherCardProps) {
   return (
     <div
       className={classNames("bg-white border border-gray-200  shadow flex flex-col flex-1 py-7 hover:cursor-pointer", {
-        "bg-gray-200": isSelected
+        "bg-gray-300": isSelected
       })}
       onClick={() => onChangeSelectedDay(weatherDetail)}
+      aria-hidden="true"
     >
       <div className="font-bold text-sm">{DAYS_OF_WEEK[date.getDay()]}</div>
       <img src={getIconWeather(weatherDetail.weather[0].icon)} alt="" />

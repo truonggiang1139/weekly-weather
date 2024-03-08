@@ -1,32 +1,35 @@
 import { useState } from "react";
 import "./App.css";
-
-import { GeoCoordinateAPI } from "./apis/geo-coordinate";
-import { WeeklyWeatherAPI } from "./apis/weekly-weather";
+import { getGeoCoord } from "./apis/geo-coordinate";
 import { Input } from "./common/components/input";
 import { WeatherGroup } from "./common/components/weather-group";
-import { Weather } from "./types/weather";
 import { EmptyState } from "./common/components/empty-state";
+import { GeoCoordinate } from "./types/geo-coordinate";
 
 function App() {
-  const [weatherData, setWeatherData] = useState<Weather>();
+  const [coordData, setCoorData] = useState<GeoCoordinate>();
   const [isError, setIsError] = useState<boolean>(false);
+
   const handleSearchCoord = async (cityName: string) => {
-    const geoData = await GeoCoordinateAPI.list(cityName);
-    if (geoData) {
+    try {
+      const geoData = await getGeoCoord(cityName);
+      if (!geoData) {
+        throw new Error("Geolocation data not found");
+      }
+      setCoorData(geoData);
       setIsError(false);
-      const response = await WeeklyWeatherAPI.list({ lat: geoData.lat, lon: geoData.lon });
-      setWeatherData(response);
-      return;
+    } catch (error) {
+      setIsError(true);
+      setCoorData(undefined);
     }
-    setIsError(true);
   };
 
+  console.log(coordData);
   return (
     <div className="container">
       <Input onSearchWeather={handleSearchCoord} />
 
-      {weatherData ? <WeatherGroup weatherData={weatherData} /> : <EmptyState isError={isError} />}
+      {coordData ? <WeatherGroup coordData={coordData} /> : <EmptyState isError={isError} />}
     </div>
   );
 }

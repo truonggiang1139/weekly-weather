@@ -6,9 +6,13 @@ export type WeatherDetail = {
 };
 
 export type WeatherInfor = {
+  country?: string;
+  city?: string;
+  pollution?: number;
   dt: number;
   sunrise: number;
   sunset: number;
+  currentTemp?: number;
   temp: { min: number; max: number };
   feels_like: number;
   pressure: number;
@@ -24,7 +28,7 @@ export type WeatherInfor = {
 };
 
 export type Weather = {
-  current: WeatherInfor;
+  current: Omit<WeatherInfor, "temp"> & { temp: number };
   daily: WeatherInfor[];
   lat: number;
   lon: number;
