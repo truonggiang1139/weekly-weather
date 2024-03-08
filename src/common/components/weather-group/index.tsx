@@ -11,7 +11,7 @@ type WeatherGroupProps = {
 };
 export function WeatherGroup(props: WeatherGroupProps) {
   const { coordData } = props;
-  const [selectedDay, setSelectedDay] = useState<WeatherInfor>();
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [weeklyWeather, setWeeklyWeather] = useState<WeatherInfor[]>();
   const [unitSystem, setUnitSystem] = useState<UnitMeasurement>("metric");
 
@@ -30,7 +30,6 @@ export function WeatherGroup(props: WeatherGroupProps) {
       weatherData.current.temp
     );
     setWeeklyWeather(transformedWeatherData);
-    setSelectedDay(transformedWeatherData[0]);
   };
 
   const handleChangeUnit = (unit: UnitMeasurement) => {
@@ -63,24 +62,26 @@ export function WeatherGroup(props: WeatherGroupProps) {
     }));
   };
 
-  const handleChangeSelectedDay = (selectDay: WeatherInfor) => {
-    setSelectedDay(selectDay);
+  const handleChangeSelectedDay = (index: number) => {
+    setSelectedIndex(index);
   };
   return (
     <div className="max-w-2xl mx-auto mt-5 border border-gray-300 rounded-lg shadow-sm ">
-      {selectedDay && (
-        <SelectedDayWeather
-          selectedDay={selectedDay}
-          unit={unitSystem}
-          isToday={isToday(selectedDay.dt)}
-          onChangeUnit={handleChangeUnit}
-        />
+      {weeklyWeather && (
+        <>
+          <SelectedDayWeather
+            selectedDay={weeklyWeather[selectedIndex]}
+            unit={unitSystem}
+            isToday={isToday(weeklyWeather[selectedIndex].dt)}
+            onChangeUnit={handleChangeUnit}
+          />
+          <WeeklyWeather
+            weeklyWeather={weeklyWeather}
+            selectedDay={weeklyWeather[selectedIndex]}
+            onChangeSelectedDay={handleChangeSelectedDay}
+          />
+        </>
       )}
-      <WeeklyWeather
-        weeklyWeather={weeklyWeather}
-        selectedDay={selectedDay}
-        onChangeSelectedDay={handleChangeSelectedDay}
-      />
     </div>
   );
 }

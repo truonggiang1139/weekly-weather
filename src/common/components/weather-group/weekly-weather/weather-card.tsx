@@ -6,17 +6,18 @@ import classNames from "classnames";
 type WeatherCardProps = {
   weatherDetail: WeatherInfor;
   isSelected: boolean;
-  onChangeSelectedDay: (selectDay: WeatherInfor) => void;
+  index: number;
+  onChangeSelectedDay: (index: number) => void;
 };
 export function WeatherCard(props: WeatherCardProps) {
-  const { weatherDetail, isSelected, onChangeSelectedDay } = props;
+  const { weatherDetail, isSelected, index, onChangeSelectedDay } = props;
   const date = new Date(weatherDetail.dt * 1000);
   return (
     <div
       className={classNames("bg-white border border-gray-200  shadow flex flex-col flex-1 py-7 hover:cursor-pointer", {
         "bg-gray-300": isSelected
       })}
-      onClick={() => onChangeSelectedDay(weatherDetail)}
+      onClick={() => onChangeSelectedDay(index)}
       aria-hidden="true"
     >
       <div className="font-bold text-sm">{DAYS_OF_WEEK[date.getDay()]}</div>
