@@ -1,50 +1,33 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { useMutation } from "@tanstack/react-query";
+
 import { GeoCoordinateAPI } from "./apis/geo-coordinate";
 import { WeeklyWeatherAPI } from "./apis/weekly-weather";
+import { Input } from "./common/components/input";
+import { WeatherGroup } from "./common/components/weather-group";
+import { Weather } from "./types/weather";
+import { EmptyState } from "./common/components/empty-state";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [cityName, setCityName] = useState<string>("");
-  const { mutateAsync: getGeoCoordByName, isPending: isSubmitting } = useMutation({
-    mutationFn: GeoCoordinateAPI.list
-  });
-  const { mutateAsync: getWeeklyWeather } = useMutation({
-    mutationFn: WeeklyWeatherAPI.list
-  });
-
-  const handleSearchCoord = async () => {
-    const res = await getGeoCoordByName(cityName);
-    const response = await getWeeklyWeather({ lat: res.lat, lon: res.lon });
-    console.log(response);
+  const [weatherData, setWeatherData] = useState<Weather>();
+  const [isError, setIsError] = useState<boolean>(false);
+  const handleSearchCoord = async (cityName: string) => {
+    const geoData = await GeoCoordinateAPI.list(cityName);
+    if (geoData) {
+      setIsError(false);
+      const response = await WeeklyWeatherAPI.list({ lat: geoData.lat, lon: geoData.lon });
+      setWeatherData(response);
+      return;
+    }
+    setIsError(true);
   };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-      <input type="text" value={cityName} onChange={(e) => setCityName(e.target.value)} />
-      <button disabled={isSubmitting} onClick={handleSearchCoord}>
-        Click me
-      </button>
-    </>
+    <div className="container">
+      <Input onSearchWeather={handleSearchCoord} />
+
+      {weatherData ? <WeatherGroup weatherData={weatherData} /> : <EmptyState isError={isError} />}
+    </div>
   );
 }
 
