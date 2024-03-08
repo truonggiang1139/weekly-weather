@@ -1,3 +1,5 @@
+import { WEATHER_ICON_URL_PATH } from "../constants";
+
 export const getIconWeather = (icon: string) => {
-  return `https://openweathermap.org/img/wn/${icon}@2x.png`;
+  return `${WEATHER_ICON_URL_PATH}/${icon}@2x.png`;
 };
