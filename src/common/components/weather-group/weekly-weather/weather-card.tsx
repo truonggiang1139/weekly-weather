@@ -14,8 +14,8 @@ export function WeatherCard(props: WeatherCardProps) {
   const date = new Date(weatherDetail.dt * 1000);
   return (
     <div
-      className={classNames("bg-white border border-gray-200  shadow flex flex-col flex-1 py-7 hover:cursor-pointer", {
-        "bg-gray-300": isSelected
+      className={classNames("border border-gray-200  shadow flex flex-col flex-1 py-7 hover:cursor-pointer", {
+        "bg-gray-200": isSelected
       })}
       onClick={() => onChangeSelectedDay(index)}
       aria-hidden="true"
