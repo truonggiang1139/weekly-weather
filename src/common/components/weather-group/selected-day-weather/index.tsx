@@ -24,35 +24,31 @@ export function SelectedDayWeather(props: SelectedDayWeatherProps) {
       </div>
 
       <div className="flex">
-        <div className="flex-1 flex flex-wrap justify-center items-center">
+        <div className="flex-1 flex items-center relative">
           <img src={getIconWeather(selectedDay.weather[0].icon)} alt="" />
-
-          <div className="flex">
-            <div className="font-bold text-4xl">
-              {isToday ? Math.floor(Number(selectedDay?.currentTemp)) : Math.floor(selectedDay.temp.max)}°
-            </div>
-
-            <div className=" text-sm  text-gray-600">
-              <span
-                onClick={() => onChangeUnit("imperial")}
-                className={classNames("hover:cursor-pointer", {
-                  "underline text-black font-bold": unit === "imperial"
-                })}
-                aria-hidden="true"
-              >
-                F
-              </span>
-              /
-              <span
-                onClick={() => onChangeUnit("metric")}
-                className={classNames("hover:cursor-pointer", {
-                  "underline text-black font-bold": unit === "metric"
-                })}
-                aria-hidden="true"
-              >
-                C
-              </span>
-            </div>
+          <div className="font-bold text-4xl">
+            {isToday ? Math.floor(Number(selectedDay?.currentTemp)) : Math.floor(selectedDay.temp.max)}°
+          </div>
+          <div className="absolute text-sm top-[30%] right-[40%] text-gray-600">
+            <span
+              onClick={() => onChangeUnit("imperial")}
+              className={classNames("hover:cursor-pointer", {
+                "underline text-black font-bold": unit === "imperial"
+              })}
+              aria-hidden="true"
+            >
+              F
+            </span>
+            /
+            <span
+              onClick={() => onChangeUnit("metric")}
+              className={classNames("hover:cursor-pointer", {
+                "underline text-black font-bold": unit === "metric"
+              })}
+              aria-hidden="true"
+            >
+              C
+            </span>
           </div>
         </div>
         <div className="flex-1 flex items-start flex-col text-left text-sm justify-center">
